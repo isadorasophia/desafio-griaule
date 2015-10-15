@@ -37,23 +37,23 @@ int main(int argc, char const *argv[]) {
 		}
 
 		openDir(&suspectsDir, argv[2]);
+			loadImage(&dbFile, &dbImg);
+			extractTemplate(dbImg, &dbTpt);
 
 		// Iterate through all suspects
 		while (suspectsDir.has_next) {
 			readFile(&suspectsDir, &suspectFile);
 
-			// Skip directories
-			if (suspectFile.is_dir) {
+			// Skip non-directories
+			if (!suspectFile.is_dir || strcmp(suspectFile.name, ".") == 0 || strcmp(suspectFile.name, "..") == 0) {
 				tinydir_next(&suspectsDir);
 				continue;
 			}
 
 			// Load files from disk
-			loadImage(dbFile.path, &dbImg);
-			loadImage(suspectFile.path, &suspectImg);
+			loadImage(&suspectFile, &suspectImg);
 
 			// Extract templates
-			extractTemplate(dbImg, &dbTpt);
 			extractTemplate(suspectImg, &suspectTpt);
 
 			// Match templates

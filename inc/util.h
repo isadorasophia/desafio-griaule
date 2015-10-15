@@ -4,7 +4,7 @@
 
 void initializeSDK();
 
-void loadImage(char *path, GR_IMAGE **img);
+void loadImage(tinydir_file *path, GR_IMAGE **img);
 
 void extractTemplate(GR_IMAGE *img, GR_TEMPLATE **tpt);
 

@@ -17,13 +17,23 @@ void initializeSDK() {
 	}
 }
 
-void loadImage(char *path, GR_IMAGE **img) {
-	int ret = GrLoadFromFile(path, img);
+
+void loadImage(tinydir_file *file, GR_IMAGE **img) {
+	int ret;
+	char fullPath[_TINYDIR_PATH_MAX + _TINYDIR_FILENAME_MAX];
+
+	strcpy(fullPath, file->path);
+
+	if (file->is_dir) {
+		strcat(fullPath, "/digital.png");
+	}
+	
+	ret = GrLoadFromFile(fullPath, img);
 
 	(*img)->resolution = 500;
 
 	if (ret < GR_OK) {
-		cerr << "Unable to load image from file '" << path << "'." << endl;
+		cerr << "Unable to load image from file '" << fullPath << "'." << endl;
 		cerr << "For more information, check 'GBSFingerprint.h' file for the error code (" << ret << ")." << endl;
 		exit(1);
 	}
