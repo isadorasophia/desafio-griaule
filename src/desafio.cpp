@@ -58,8 +58,8 @@ int main(int argc, char const *argv[]) {
 
 			// Match templates
 			cout << "Matching '" << dbFile.name
-				 << "' against '" << suspectFile.name 
-				 << ":";
+				 << "' against '" << suspectFile.name
+				 << "':";
 
 			if (matchTemplates(suspectTpt, dbTpt)) {
 				cout << " MATCH!" << endl;
