@@ -37,8 +37,6 @@ int main(int argc, char const *argv[]) {
 		}
 
 		openDir(&suspectsDir, argv[2]);
-			loadImage(&dbFile, &dbImg);
-			extractTemplate(dbImg, &dbTpt);
 
 		// Iterate through all suspects
 		while (suspectsDir.has_next) {
@@ -52,9 +50,11 @@ int main(int argc, char const *argv[]) {
 
 			// Load files from disk
 			loadImage(&suspectFile, &suspectImg);
+			loadImage(&dbFile, &dbImg);
 
 			// Extract templates
 			extractTemplate(suspectImg, &suspectTpt);
+			extractTemplate(dbImg, &dbTpt);
 
 			// Match templates
 			cout << "Matching '" << dbFile.name
