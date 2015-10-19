@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 #include "3rd/GBSFingerprint.h"
@@ -11,9 +10,9 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 	int ret;
-	GR_IMAGE *suspectImg, *dbImg;
-	GR_TEMPLATE *suspectTpt, *dbTpt;
-	tinydir_dir suspectsDir, dbDir;
+	GR_IMAGE 	 *suspectImg, *dbImg;
+	GR_TEMPLATE  *suspectTpt, *dbTpt;
+	tinydir_dir  suspectsDir, dbDir;
 	tinydir_file dbFile, suspectFile;
 
 	if (argc != 3 || strcmp(argv[1], HELP_OPTION) == 0) {
@@ -24,6 +23,7 @@ int main(int argc, char const *argv[]) {
 
 	initializeSDK();
 
+	// is it a valid path?
 	openDir(&dbDir, argv[1]);
 
 	// Iterate through all database entries
@@ -32,8 +32,12 @@ int main(int argc, char const *argv[]) {
 
 		// Skip directories
 		if (dbFile.is_dir) {
-			tinydir_next(&dbDir);
-			continue;
+			// is there a next file?
+			if (tinydir_next(&dbDir) != 0) {
+				break;
+			} else {
+				continue;
+			}
 		}
 
 		openDir(&suspectsDir, argv[2]);
@@ -44,8 +48,12 @@ int main(int argc, char const *argv[]) {
 
 			// Skip non-directories
 			if (!suspectFile.is_dir || strcmp(suspectFile.name, ".") == 0 || strcmp(suspectFile.name, "..") == 0) {
-				tinydir_next(&suspectsDir);
-				continue;
+				// is there a next file?
+				if (tinydir_next(&suspectsDir) != 0) {
+					break;
+				} else {
+					continue;
+				}
 			}
 
 			// Load files from disk
@@ -55,7 +63,7 @@ int main(int argc, char const *argv[]) {
 			// Extract templates
 			extractTemplate(suspectImg, &suspectTpt);
 			extractTemplate(dbImg, &dbTpt);
-
+ 
 			// Match templates
 			cout << "Matching '" << dbFile.name
 				 << "' against '" << suspectFile.name
@@ -67,11 +75,24 @@ int main(int argc, char const *argv[]) {
 				cout << " NO MATCH!" << endl;
 			}
 
-			tinydir_next(&suspectsDir);
+			// free image files
+			GrFreeImage(&suspectImg);
+			GrFreeImage(&dbImg);
+
+			// free templates
+			GrFreeTemplate(&suspectTpt);
+			GrFreeTemplate(&dbTpt);
+
+			if (tinydir_next(&suspectsDir) != 0) {
+				break;
+			}
 		}
 
 		tinydir_close(&suspectsDir);
-		tinydir_next(&dbDir);
+
+		if (tinydir_next(&dbDir) != 0) {
+			break;
+		}
 	}
 
 	tinydir_close(&dbDir);
