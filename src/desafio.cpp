@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 
 #include "3rd/GBSFingerprint.h"
 #include "3rd/tinydir.h"
@@ -14,6 +15,7 @@ int main(int argc, char const *argv[]) {
 	GR_TEMPLATE  *suspectTpt, *dbTpt;
 	tinydir_dir  suspectsDir, dbDir;
 	tinydir_file dbFile, suspectFile;
+	char* productKey;
 
 	if (argc != 3 || strcmp(argv[1], HELP_OPTION) == 0) {
 		cerr << "Please call the executable as the following:" << endl;
@@ -40,6 +42,12 @@ int main(int argc, char const *argv[]) {
 			}
 		}
 
+		// Load files from disk
+		loadImage(&dbFile, &dbImg);
+
+		// Extract templates
+		extractTemplate(dbImg, &dbTpt);
+
 		openDir(&suspectsDir, argv[2]);
 
 		// Iterate through all suspects
@@ -58,11 +66,9 @@ int main(int argc, char const *argv[]) {
 
 			// Load files from disk
 			loadImage(&suspectFile, &suspectImg);
-			loadImage(&dbFile, &dbImg);
 
 			// Extract templates
 			extractTemplate(suspectImg, &suspectTpt);
-			extractTemplate(dbImg, &dbTpt);
  
 			// Match templates
 			cout << "Matching '" << dbFile.name
@@ -77,16 +83,20 @@ int main(int argc, char const *argv[]) {
 
 			// free image files
 			GrFreeImage(&suspectImg);
-			GrFreeImage(&dbImg);
 
 			// free templates
 			GrFreeTemplate(&suspectTpt);
-			GrFreeTemplate(&dbTpt);
 
 			if (tinydir_next(&suspectsDir) != 0) {
 				break;
 			}
 		}
+
+		// free image files
+		GrFreeImage(&dbImg);
+
+		// free templates
+		GrFreeTemplate(&dbTpt);
 
 		tinydir_close(&suspectsDir);
 
@@ -98,6 +108,8 @@ int main(int argc, char const *argv[]) {
 	tinydir_close(&dbDir);
 
 	finalizeSDK();
+
+	// free(productKey);
 
 	return 0;
 }

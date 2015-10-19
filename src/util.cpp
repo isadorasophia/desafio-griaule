@@ -7,6 +7,16 @@
 
 using namespace std;
 
+void installLicense(char* productKey) {
+	int ret = GrInstallLicense(productKey);
+
+	if (ret < GR_OK) {
+		cerr << "Unable to install the software license." << endl;
+		cerr << "For more information, check 'GBSFingerprint.h' file for the error code (" << ret << ")." << endl;
+		exit(1);
+	}
+}
+
 void initializeSDK() {
 	int ret = GrInitialize();
 
