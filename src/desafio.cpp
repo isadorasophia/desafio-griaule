@@ -67,6 +67,8 @@ int main(int argc, char const *argv[]) {
 			// Load files from disk
 			loadImage(&suspectFile, &suspectImg);
 
+			cout << "Q" << endl;
+
 			// Extract templates
 			extractTemplate(suspectImg, &suspectTpt);
  

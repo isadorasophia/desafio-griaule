@@ -7,16 +7,6 @@
 
 using namespace std;
 
-void installLicense(char* productKey) {
-	int ret = GrInstallLicense(productKey);
-
-	if (ret < GR_OK) {
-		cerr << "Unable to install the software license." << endl;
-		cerr << "For more information, check 'GBSFingerprint.h' file for the error code (" << ret << ")." << endl;
-		exit(1);
-	}
-}
-
 void initializeSDK() {
 	int ret = GrInitialize();
 
@@ -37,16 +27,18 @@ void loadImage(tinydir_file *file, GR_IMAGE **img) {
 	if (file->is_dir) {
 		strcat(fullPath, "/digital.png");
 	}
-	
-	ret = GrLoadFromFile(fullPath, img);
 
-	(*img)->resolution = 500;
+	*img = (GR_IMAGE*)malloc (sizeof(GR_IMAGE));
+
+	ret = GrLoadFromFile(fullPath, img);
 
 	if (ret < GR_OK) {
 		cerr << "Unable to load image from file '" << fullPath << "'." << endl;
 		cerr << "For more information, check 'GBSFingerprint.h' file for the error code (" << ret << ")." << endl;
 		exit(1);
 	}
+
+	(*img)->resolution = 500;
 }
 
 void extractTemplate(GR_IMAGE *img, GR_TEMPLATE **tpt) {
