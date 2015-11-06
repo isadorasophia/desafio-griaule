@@ -11,11 +11,10 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 	int ret;
-	GR_IMAGE 	 *suspectImg, *dbImg;
+	GR_IMAGE     *suspectImg, *dbImg;
 	GR_TEMPLATE  *suspectTpt, *dbTpt;
 	tinydir_dir  suspectsDir, dbDir;
 	tinydir_file dbFile, suspectFile;
-	char* productKey;
 
 	if (argc != 3 || strcmp(argv[1], HELP_OPTION) == 0) {
 		cerr << "Please call the executable as the following:" << endl;
@@ -108,8 +107,6 @@ int main(int argc, char const *argv[]) {
 	tinydir_close(&dbDir);
 
 	finalizeSDK();
-
-	// free(productKey);
 
 	return 0;
 }
