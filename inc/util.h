@@ -2,8 +2,6 @@
 #include "3rd/GBSFingerprint.h"
 #include "3rd/tinydir.h"
 
-void installLicense(char* productKey);
-
 void initializeSDK();
 
 void loadImage(tinydir_file *path, GR_IMAGE **img);
